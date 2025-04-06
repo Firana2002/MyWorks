@@ -1,0 +1,88 @@
+@{
+    ViewData["Title"] = "Журналирование SQL-запросов";
+}
+
+<h1>Журналирование SQL-запросов</h1>
+
+<div class="alert alert-info mb-4">
+    <p>
+        Entity Framework Core позволяет журналировать генерируемые SQL-запросы. 
+        Это помогает анализировать производительность и отлаживать проблемы с запросами.
+    </p>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Сравнение различных механизмов загрузки</h5>
+    </div>
+    <div class="card-body">
+        <h6>Eager Loading (жадная загрузка)</h6>
+        <p>
+            При жадной загрузке все связанные данные загружаются одним SQL-запросом с использованием JOIN.
+            <br />
+            <code>
+                db.Courses
+                  .Include(c => c.CourseTeachers)
+                  .ThenInclude(ct => ct.Teacher)
+                  .Include(c => c.CourseStudents)
+                  .ThenInclude(cs => cs.Student)
+                  .ToList();
+            </code>
+        </p>
+        
+        <h6>Explicit Loading (явная загрузка)</h6>
+        <p>
+            При явной загрузке сначала загружается основная сущность, а затем явно загружаются связанные с ней данные по мере необходимости.
+            <br />
+            <code>
+                var course = db.Courses.FirstOrDefault();<br />
+                db.Entry(course).Collection(c => c.CourseTeachers).Load();<br />
+                foreach (var ct in course.CourseTeachers)<br />
+                {<br />
+                &nbsp;&nbsp;db.Entry(ct).Reference(t => t.Teacher).Load();<br />
+                }
+            </code>
+        </p>
+        
+        <h6>Lazy Loading (ленивая загрузка)</h6>
+        <p>
+            При ленивой загрузке связанные данные загружаются автоматически при первом обращении к навигационному свойству.
+            <br />
+            <code>
+                var course = db.Courses.FirstOrDefault();<br />
+                // Автоматически выполнится запрос при обращении к свойству<br />
+                var teachersCount = course.CourseTeachers.Count;
+            </code>
+        </p>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Результаты журналирования</h5>
+    </div>
+    <div class="card-body">
+        <p>
+            Журналирование SQL-запросов настроено в файле Program.cs с помощью:
+            <br />
+            <code>
+                .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information)<br />
+                .EnableSensitiveDataLogging()
+            </code>
+        </p>
+        
+        <p>
+            Для просмотра журнала запросов:
+        </p>
+        <ol>
+            <li>Запустите приложение из командной строки или терминала</li>
+            <li>Просмотрите вывод в консоли</li>
+            <li>Проанализируйте сгенерированные SQL-запросы</li>
+        </ol>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-primary">Вернуться на главную</a>
+    <a asp-action="RunQueryDemo" class="btn btn-success">Выполнить демонстрационные запросы</a>
+</div>

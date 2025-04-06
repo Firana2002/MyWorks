@@ -8,7 +8,7 @@ namespace MultiThread01
 {
     class ProgrammLab01
     {
-        static void Main()
+        static void Mainnn()
         {
             Console.WriteLine("Основной поток начал работу");
 

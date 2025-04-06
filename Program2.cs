@@ -10,7 +10,7 @@ namespace MultiThread02
     {
     static ManualResetEvent syncEvent = new ManualResetEvent(false);
 
-    static void Main()
+    static void Mainn()
     {
         // Первый запуск: поток 1, затем поток 2
         Thread thread1 = new Thread(PrintNumbersFirst);

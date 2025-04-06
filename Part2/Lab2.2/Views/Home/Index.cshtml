@@ -1,0 +1,128 @@
+﻿@model Lab2._2.Models.CourseViewModel
+
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Управление курсами</h1>
+    <p>Пример работы с Entity Framework Core и связями многие-ко-многим</p>
+</div>
+
+<h2>Курсы</h2>
+<div class="row">
+    @foreach (var course in Model.Courses)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>@course.Title</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Длительность:</strong> @course.Duration часов</p>
+                    <p><strong>Описание:</strong> @course.Description</p>
+                    
+                    <h6>Преподаватели:</h6>
+                    <ul>
+                        @foreach (var ct in course.CourseTeachers)
+                        {
+                            <li>@ct.Teacher.FirstName @ct.Teacher.LastName (@ct.Teacher.Email)</li>
+                        }
+                    </ul>
+                    
+                    <h6>Студенты:</h6>
+                    <ul>
+                        @foreach (var cs in course.CourseStudents)
+                        {
+                            <li>@cs.Student.FirstName @cs.Student.LastName - Оценка: @cs.Grade</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+
+<h2>Преподаватели и их курсы</h2>
+<div class="row">
+    @foreach (var teacher in Model.Teachers)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>@teacher.FirstName @teacher.LastName</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Email:</strong> @teacher.Email</p>
+                    
+                    <h6>Ведёт курсы:</h6>
+                    <ul>
+                        @foreach (var ct in teacher.CourseTeachers)
+                        {
+                            <li>@ct.Course.Title (@ct.Course.Duration часов)</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+
+<h2>Студенты и их курсы</h2>
+<div class="row">
+    @foreach (var student in Model.Students)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>@student.FirstName @student.LastName</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Возраст:</strong> @student.Age</p>
+                    <p><strong>Город:</strong> @student.City</p>
+                    
+                    <h6>Посещает курсы:</h6>
+                    <ul>
+                        @foreach (var cs in student.CourseStudents)
+                        {
+                            <li>@cs.Course.Title - Оценка: @cs.Grade</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+
+<h2>Демонстрация работы с данными</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Управление данными</h5>
+            </div>
+            <div class="card-body">
+                <a asp-action="ManageData" class="btn btn-primary">Выполнить операции с данными</a>
+                <p class="mt-2">Нажмите кнопку для демонстрации добавления, обновления и удаления данных</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Демонстрация явной загрузки</h5>
+            </div>
+            <div class="card-body">
+                <a asp-action="ExplicitLoadingDemo" class="btn btn-info">Показать пример явной загрузки</a>
+                <p class="mt-2">Демонстрация работы с Explicit Loading в Entity Framework Core</p>
+            </div>
+        </div>
+    </div>
+</div>
